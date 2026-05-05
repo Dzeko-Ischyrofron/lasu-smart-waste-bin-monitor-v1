@@ -123,8 +123,10 @@ export type Database = {
           id: string
           is_online: boolean
           last_update: string
+          latitude: number | null
           lid_status: Database["public"]["Enums"]["lid_status"]
           location: string
+          longitude: number | null
           name: string
           odor_level: Database["public"]["Enums"]["odor_level"]
         }
@@ -137,8 +139,10 @@ export type Database = {
           id: string
           is_online?: boolean
           last_update?: string
+          latitude?: number | null
           lid_status?: Database["public"]["Enums"]["lid_status"]
           location: string
+          longitude?: number | null
           name: string
           odor_level?: Database["public"]["Enums"]["odor_level"]
         }
@@ -151,8 +155,10 @@ export type Database = {
           id?: string
           is_online?: boolean
           last_update?: string
+          latitude?: number | null
           lid_status?: Database["public"]["Enums"]["lid_status"]
           location?: string
+          longitude?: number | null
           name?: string
           odor_level?: Database["public"]["Enums"]["odor_level"]
         }

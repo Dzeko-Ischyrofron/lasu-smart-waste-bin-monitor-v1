@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Header } from "@/components/dashboard/Header";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { BinStatusCard } from "@/components/dashboard/BinStatusCard";
@@ -10,15 +11,28 @@ import { AlertsPanel } from "@/components/dashboard/AlertsPanel";
 import { LiveSensorPanel } from "@/components/dashboard/LiveSensorPanel";
 import { CollectionSchedule } from "@/components/dashboard/CollectionSchedule";
 import { FleetOverview } from "@/components/dashboard/FleetOverview";
+import { BinSelector } from "@/components/dashboard/BinSelector";
+import { BinMap } from "@/components/dashboard/BinMap";
+import { HistoricalAnalytics } from "@/components/dashboard/HistoricalAnalytics";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Trash2, Wind, Battery, Wifi, DoorClosed, Activity, BarChart3, Settings, Calendar, Loader2 } from "lucide-react";
-import { useBinData } from "@/hooks/useBinData";
+import { useBinData, useBinsList } from "@/hooks/useBinData";
 import { format } from "date-fns";
 
 const Index = () => {
-  const { bin, readings, alerts, activities, schedule, loading } = useBinData("BIN-001");
+  const { bins: allBins, loading: binsLoading } = useBinsList();
+  const [selectedBinId, setSelectedBinId] = useState<string | null>(null);
 
-  if (loading || !bin) {
+  // Default selection to first bin once list loads
+  useEffect(() => {
+    if (!selectedBinId && allBins.length > 0) {
+      setSelectedBinId(allBins[0].id);
+    }
+  }, [allBins, selectedBinId]);
+
+  const { bin, readings, alerts, activities, schedule, loading } = useBinData(selectedBinId);
+
+  if (binsLoading || (selectedBinId && (loading || !bin))) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
@@ -29,24 +43,31 @@ const Index = () => {
     );
   }
 
-  // Build chart data from sensor readings (oldest -> newest)
+  if (!bin || allBins.length === 0) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container py-20 text-center space-y-3">
+          <h2 className="text-2xl font-bold">No bins registered</h2>
+          <p className="text-muted-foreground">An admin needs to register a bin in Settings → Bin Management.</p>
+        </main>
+      </div>
+    );
+  }
+
   const sortedReadings = [...readings].reverse();
-  const chartData = sortedReadings.slice(-7).map((r) => ({
+  const chartData = sortedReadings.slice(-12).map((r) => ({
     time: format(new Date(r.recorded_at), "HH:mm"),
     fillLevel: r.fill_percent ?? 0,
   }));
-  if (chartData.length === 0) {
-    chartData.push({ time: "Now", fillLevel: bin.fill_level });
-  }
+  if (chartData.length === 0) chartData.push({ time: "Now", fillLevel: bin.fill_level });
 
-  // Battery trend (last 7 readings)
   const batteryData = sortedReadings.slice(-7).map((r) => ({
-    time: format(new Date(r.recorded_at), "EEE"),
+    time: format(new Date(r.recorded_at), "HH:mm"),
     battery: r.battery ?? bin.battery,
   }));
   if (batteryData.length === 0) batteryData.push({ time: "Now", battery: bin.battery });
 
-  // Odor data (last 6 readings)
   const odorData = sortedReadings.slice(-6).map((r, i, arr) => ({
     hour: i === arr.length - 1 ? "Now" : format(new Date(r.recorded_at), "HH:mm"),
     level: r.mq135_ppm ?? 0,
@@ -118,14 +139,25 @@ const Index = () => {
     priority: s.priority,
   }));
 
+  const mapPins = allBins.map((b) => ({
+    id: b.id, name: b.name, location: b.location,
+    fill_level: b.fill_level, is_online: b.is_online,
+    latitude: b.latitude, longitude: b.longitude,
+  }));
+
+  const allBinsOpts = allBins.map((b) => ({ id: b.id, name: b.name, location: b.location }));
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
       
       <main className="container py-6 space-y-6">
-        <div className="animate-slide-up">
-          <h2 className="text-2xl font-bold tracking-tight">Smart Waste Management Dashboard</h2>
-          <p className="text-muted-foreground">Monitor and control your ESP32-powered smart bin in real-time</p>
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 animate-slide-up">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight">Smart Waste Management Dashboard</h2>
+            <p className="text-muted-foreground">Monitor and control your ESP32-powered smart bins in real-time</p>
+          </div>
+          <BinSelector bins={allBinsOpts} value={selectedBinId ?? ""} onChange={setSelectedBinId} />
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -171,19 +203,23 @@ const Index = () => {
               <BatteryTrendsChart data={batteryData} />
               <OdorAnalysisChart data={odorData} />
             </div>
-            <FleetOverview bin={fleetBin} />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <FleetOverview bin={fleetBin} />
+              <HistoricalAnalytics binId={bin.id} />
+            </div>
+            <BinMap bins={mapPins} />
           </TabsContent>
 
           <TabsContent value="controls" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <ControlPanel bins={[{ id: bin.id, name: bin.name, lid_status: bin.lid_status }]} />
+              <ControlPanel bins={allBins.map((b) => ({ id: b.id, name: b.name, lid_status: b.lid_status }))} />
               <LiveSensorPanel readings={sensorReadings} />
             </div>
           </TabsContent>
 
           <TabsContent value="schedule" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <CollectionSchedule schedule={scheduleFeed} bins={[{ id: bin.id, name: bin.name }]} />
+              <CollectionSchedule schedule={scheduleFeed} bins={allBinsOpts} />
               <FleetOverview bin={fleetBin} />
             </div>
           </TabsContent>
