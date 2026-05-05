@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="ogTitle ogDesc">
+  <title id="ogTitle">SmartBin — Real-time waste bin dashboard</title>
+  <desc id="ogDesc">Real-time monitoring dashboard for smart waste bins.</desc>
+
+  <!-- background -->
+  <rect width="1200" height="630" fill="#ffffff"/>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1">
+      <stop offset="0" stop-color="#f6fff9"/>
+      <stop offset="1" stop-color="#eefcf0"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- green circle backdrop -->
+  <circle cx="600" cy="315" r="200" fill="#27AE60"/>
+
+  <!-- white bin icon centered -->
+  <g transform="translate(350,160) scale(0.9)">
+    <rect x="120" y="80" width="560" height="80" rx="20" fill="#ffffff"/>
+    <rect x="170" y="160" width="460" height="420" rx="24" fill="#ffffff"/>
+    <rect x="270" y="220" width="80" height="280" rx="12" fill="#27AE60"/>
+    <rect x="380" y="220" width="80" height="280" rx="12" fill="#27AE60"/>
+    <rect x="490" y="220" width="80" height="280" rx="12" fill="#27AE60"/>
+    <rect x="380" y="130" width="120" height="18" rx="9" fill="#27AE60"/>
+  </g>
+
+  <!-- subtle shadow -->
+  <ellipse cx="600" cy="520" rx="280" ry="36" fill="#000" opacity="0.06"/>
+</svg>

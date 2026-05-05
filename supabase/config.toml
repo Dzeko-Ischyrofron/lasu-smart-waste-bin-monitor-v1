@@ -1,1 +1,4 @@
-project_id = "nqmbfmjqjrdemtuztyiq"
+project_id = "waegzzuyoafiterlrvgg"
+
+[functions.device-ingest]
+verify_jwt = false

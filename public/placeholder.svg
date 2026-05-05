@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200" role="img" aria-labelledby="title desc">
+  <title id="title">SmartBin - clean icon (green/white)</title>
+  <desc id="desc">Public-domain clean trash bin icon styled in green and white for use as favicon and app icon.</desc>
+  <!-- green circular background -->
+  <rect width="1200" height="1200" fill="#ffffff"/>
+  <circle cx="600" cy="600" r="520" fill="#27AE60"/>
+
+  <!-- white trash can icon centered -->
+  <g transform="translate(300,300) scale(0.8)">
+    <!-- lid -->
+    <rect x="120" y="80" width="560" height="80" rx="20" fill="#ffffff"/>
+    <rect x="220" y="56" width="360" height="30" rx="12" fill="#ffffff" opacity="0.92"/>
+
+    <!-- body -->
+    <rect x="170" y="160" width="460" height="420" rx="24" fill="#ffffff"/>
+
+    <!-- inner cutouts to make it recognizable at small sizes -->
+    <rect x="270" y="220" width="80" height="280" rx="12" fill="#27AE60"/>
+    <rect x="380" y="220" width="80" height="280" rx="12" fill="#27AE60"/>
+    <rect x="490" y="220" width="80" height="280" rx="12" fill="#27AE60"/>
+
+    <!-- handle -->
+    <rect x="380" y="130" width="120" height="18" rx="9" fill="#27AE60"/>
+  </g>
+</svg>  
