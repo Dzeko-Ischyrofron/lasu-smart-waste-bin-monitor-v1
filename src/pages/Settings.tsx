@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { ArrowLeft, Loader2, Plus, Trash2 } from "lucide-react";
+import { BinManagement } from "@/components/dashboard/BinManagement";
 
 type AppRole = "admin" | "viewer" | "personnel";
 
@@ -309,6 +310,8 @@ export default function Settings() {
             </CardContent>
           </Card>
         )}
+
+        {isAdmin && <BinManagement />}
       </main>
     </div>
   );
