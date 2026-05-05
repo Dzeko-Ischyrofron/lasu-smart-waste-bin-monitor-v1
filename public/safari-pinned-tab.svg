@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" fill="currentColor" role="img" aria-label="Smart bin icon (monochrome)">
+  <!-- Monochrome trash bin for Safari pinned tab (uses currentColor) -->
+  <g transform="translate(150,150) scale(0.9)">
+    <rect x="150" y="180" width="900" height="580" rx="60"/>
+    <rect x="120" y="90" width="960" height="120" rx="40"/>
+    <rect x="360" y="340" width="480" height="340" rx="36" fill="#000"/>
+    <rect x="420" y="420" width="80" height="240" rx="10"/>
+    <rect x="540" y="420" width="80" height="240" rx="10"/>
+    <rect x="660" y="420" width="80" height="240" rx="10"/>
+  </g>
+</svg>
