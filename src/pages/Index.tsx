@@ -12,7 +12,7 @@ import { LiveSensorPanel } from "@/components/dashboard/LiveSensorPanel";
 import { CollectionSchedule } from "@/components/dashboard/CollectionSchedule";
 import { FleetOverview } from "@/components/dashboard/FleetOverview";
 import { BinSelector } from "@/components/dashboard/BinSelector";
-import { BinMap } from "@/components/dashboard/BinMap";
+
 import { HistoricalAnalytics } from "@/components/dashboard/HistoricalAnalytics";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Trash2, Wind, Battery, Wifi, DoorClosed, Activity, BarChart3, Settings, Calendar, Loader2 } from "lucide-react";
@@ -139,12 +139,6 @@ const Index = () => {
     priority: s.priority,
   }));
 
-  const mapPins = allBins.map((b) => ({
-    id: b.id, name: b.name, location: b.location,
-    fill_level: b.fill_level, is_online: b.is_online,
-    latitude: b.latitude, longitude: b.longitude,
-  }));
-
   const allBinsOpts = allBins.map((b) => ({ id: b.id, name: b.name, location: b.location }));
 
   return (
@@ -207,7 +201,7 @@ const Index = () => {
               <FleetOverview bin={fleetBin} />
               <HistoricalAnalytics binId={bin.id} />
             </div>
-            <BinMap bins={mapPins} />
+            
           </TabsContent>
 
           <TabsContent value="controls" className="space-y-6">
