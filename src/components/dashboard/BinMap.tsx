@@ -46,6 +46,31 @@ export function BinMap({ bins }: BinMapProps) {
     return () => clearTimeout(t);
   }, []);
 
+  if (placed.length === 0) {
+    return (
+      <Card className="animate-fade-in">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg font-semibold flex items-center gap-2">
+            <MapIcon className="h-5 w-5 text-primary" />
+            Fleet Map
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[400px] w-full rounded-md border bg-muted/30 grid place-items-center text-center px-6">
+            <div className="space-y-2">
+              <MapIcon className="h-10 w-10 text-muted-foreground/50 mx-auto" />
+              <p className="text-sm font-medium">No bins to track yet</p>
+              <p className="text-xs text-muted-foreground max-w-sm">
+                Once an admin registers a bin and sets its latitude/longitude in
+                Settings → Bin Management, it will appear here on the map.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="animate-fade-in">
       <CardHeader className="pb-3">
@@ -58,7 +83,7 @@ export function BinMap({ bins }: BinMapProps) {
         <div className="h-[400px] w-full rounded-md overflow-hidden border">
           <MapContainer
             center={center}
-            zoom={placed.length > 0 ? 14 : 11}
+            zoom={14}
             style={{ height: "100%", width: "100%" }}
             scrollWheelZoom={false}
           >
@@ -83,11 +108,6 @@ export function BinMap({ bins }: BinMapProps) {
             ))}
           </MapContainer>
         </div>
-        {placed.length === 0 && (
-          <p className="text-xs text-muted-foreground mt-2 text-center">
-            No bins have map coordinates yet. Add latitude/longitude in Settings → Bin Management.
-          </p>
-        )}
       </CardContent>
     </Card>
   );
