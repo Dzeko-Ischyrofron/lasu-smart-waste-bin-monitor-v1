@@ -75,16 +75,22 @@ export function BinManagement() {
     load();
   };
 
+  const revealKey = async (id: string) => {
+    const { data, error } = await supabase.rpc("get_bin_device_key", { _bin_id: id });
+    if (error) { toast.error(error.message); return; }
+    if (!data) { toast.error("No key found"); return; }
+    setRevealedKey({ id, key: data as string });
+  };
+
   const rotateKey = async (id: string) => {
     if (!confirm("Rotate device API key? The ESP32 must be reflashed with the new key.")) return;
-    // Use crypto-random hex
     const bytes = new Uint8Array(24);
     crypto.getRandomValues(bytes);
     const key = Array.from(bytes).map((b) => b.toString(16).padStart(2, "0")).join("");
     const { error } = await supabase.from("bins").update({ device_api_key: key }).eq("id", id);
     if (error) { toast.error(error.message); return; }
     toast.success("Key rotated");
-    setShowKeyFor(id);
+    setRevealedKey({ id, key });
     load();
   };
 
