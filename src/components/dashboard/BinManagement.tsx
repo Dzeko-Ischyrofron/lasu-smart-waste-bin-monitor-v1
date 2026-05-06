@@ -31,11 +31,11 @@ export function BinManagement() {
   const [creating, setCreating] = useState(false);
   const [form, setForm] = useState({ id: "", name: "", location: "", latitude: "", longitude: "" });
 
-  const [showKeyFor, setShowKeyFor] = useState<string | null>(null);
+  const [revealedKey, setRevealedKey] = useState<{ id: string; key: string } | null>(null);
 
   const load = async () => {
     setLoading(true);
-    const { data } = await supabase.from("bins").select("id, name, location, device_api_key, latitude, longitude, is_online").order("name");
+    const { data } = await supabase.from("bins").select("id, name, location, latitude, longitude, is_online").order("name");
     setBins(data ?? []);
     setLoading(false);
   };
