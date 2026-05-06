@@ -17,7 +17,6 @@ interface BinRow {
   id: string;
   name: string;
   location: string;
-  device_api_key: string;
   latitude: number | null;
   longitude: number | null;
   is_online: boolean;
