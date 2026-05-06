@@ -139,12 +139,6 @@ const Index = () => {
     priority: s.priority,
   }));
 
-  const mapPins = allBins.map((b) => ({
-    id: b.id, name: b.name, location: b.location,
-    fill_level: b.fill_level, is_online: b.is_online,
-    latitude: b.latitude, longitude: b.longitude,
-  }));
-
   const allBinsOpts = allBins.map((b) => ({ id: b.id, name: b.name, location: b.location }));
 
   return (
