@@ -17,7 +17,6 @@ interface BinRow {
   id: string;
   name: string;
   location: string;
-  device_api_key: string;
   latitude: number | null;
   longitude: number | null;
   is_online: boolean;
@@ -32,11 +31,11 @@ export function BinManagement() {
   const [creating, setCreating] = useState(false);
   const [form, setForm] = useState({ id: "", name: "", location: "", latitude: "", longitude: "" });
 
-  const [showKeyFor, setShowKeyFor] = useState<string | null>(null);
+  const [revealedKey, setRevealedKey] = useState<{ id: string; key: string } | null>(null);
 
   const load = async () => {
     setLoading(true);
-    const { data } = await supabase.from("bins").select("id, name, location, device_api_key, latitude, longitude, is_online").order("name");
+    const { data } = await supabase.from("bins").select("id, name, location, latitude, longitude, is_online").order("name");
     setBins(data ?? []);
     setLoading(false);
   };
@@ -76,16 +75,22 @@ export function BinManagement() {
     load();
   };
 
+  const revealKey = async (id: string) => {
+    const { data, error } = await supabase.rpc("get_bin_device_key", { _bin_id: id });
+    if (error) { toast.error(error.message); return; }
+    if (!data) { toast.error("No key found"); return; }
+    setRevealedKey({ id, key: data as string });
+  };
+
   const rotateKey = async (id: string) => {
     if (!confirm("Rotate device API key? The ESP32 must be reflashed with the new key.")) return;
-    // Use crypto-random hex
     const bytes = new Uint8Array(24);
     crypto.getRandomValues(bytes);
     const key = Array.from(bytes).map((b) => b.toString(16).padStart(2, "0")).join("");
     const { error } = await supabase.from("bins").update({ device_api_key: key }).eq("id", id);
     if (error) { toast.error(error.message); return; }
     toast.success("Key rotated");
-    setShowKeyFor(id);
+    setRevealedKey({ id, key });
     load();
   };
 
@@ -149,15 +154,15 @@ export function BinManagement() {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1">
-                      {showKeyFor === b.id ? (
+                      {revealedKey?.id === b.id ? (
                         <>
-                          <code className="text-xs bg-muted px-2 py-1 rounded max-w-[180px] truncate">{b.device_api_key}</code>
-                          <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => { navigator.clipboard.writeText(b.device_api_key); toast.success("Copied"); }}>
+                          <code className="text-xs bg-muted px-2 py-1 rounded max-w-[180px] truncate">{revealedKey.key}</code>
+                          <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => { navigator.clipboard.writeText(revealedKey.key); toast.success("Copied"); }}>
                             <Copy className="h-3 w-3" />
                           </Button>
                         </>
                       ) : (
-                        <Button size="sm" variant="outline" onClick={() => setShowKeyFor(b.id)} className="gap-1 h-7">
+                        <Button size="sm" variant="outline" onClick={() => revealKey(b.id)} className="gap-1 h-7">
                           <KeyRound className="h-3 w-3" /> Show
                         </Button>
                       )}

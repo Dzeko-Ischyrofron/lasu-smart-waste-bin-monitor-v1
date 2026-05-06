@@ -346,7 +346,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_bin_device_key: { Args: { _bin_id: string }; Returns: string }
     }
     Enums: {
       activity_type: "alert" | "fill" | "collection" | "control" | "system"
