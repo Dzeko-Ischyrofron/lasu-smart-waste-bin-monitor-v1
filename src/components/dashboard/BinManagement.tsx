@@ -154,15 +154,15 @@ export function BinManagement() {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1">
-                      {showKeyFor === b.id ? (
+                      {revealedKey?.id === b.id ? (
                         <>
-                          <code className="text-xs bg-muted px-2 py-1 rounded max-w-[180px] truncate">{b.device_api_key}</code>
-                          <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => { navigator.clipboard.writeText(b.device_api_key); toast.success("Copied"); }}>
+                          <code className="text-xs bg-muted px-2 py-1 rounded max-w-[180px] truncate">{revealedKey.key}</code>
+                          <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => { navigator.clipboard.writeText(revealedKey.key); toast.success("Copied"); }}>
                             <Copy className="h-3 w-3" />
                           </Button>
                         </>
                       ) : (
-                        <Button size="sm" variant="outline" onClick={() => setShowKeyFor(b.id)} className="gap-1 h-7">
+                        <Button size="sm" variant="outline" onClick={() => revealKey(b.id)} className="gap-1 h-7">
                           <KeyRound className="h-3 w-3" /> Show
                         </Button>
                       )}
