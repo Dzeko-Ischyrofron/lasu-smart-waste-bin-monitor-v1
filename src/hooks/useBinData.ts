@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 
-type Bin = Database["public"]["Tables"]["bins"]["Row"];
+type Bin = Omit<Database["public"]["Tables"]["bins"]["Row"], "device_api_key">;
+const BIN_COLS = "id,name,location,fill_level,lid_status,odor_level,battery,is_online,hand_detected,last_update,created_at,latitude,longitude" as const;
 type SensorReading = Database["public"]["Tables"]["sensor_readings"]["Row"];
 type Alert = Database["public"]["Tables"]["alerts"]["Row"];
 type Activity = Database["public"]["Tables"]["activities"]["Row"];
