@@ -24,7 +24,7 @@ export function useBinData(binId: string | null) {
 
     const fetchAll = async () => {
       const [binRes, readingsRes, alertsRes, activitiesRes, scheduleRes] = await Promise.all([
-        supabase.from("bins").select("*").eq("id", binId).maybeSingle(),
+        supabase.from("bins").select(BIN_COLS).eq("id", binId).maybeSingle(),
         supabase.from("sensor_readings").select("*").eq("bin_id", binId).order("recorded_at", { ascending: false }).limit(200),
         supabase.from("alerts").select("*").eq("acknowledged", false).order("created_at", { ascending: false }).limit(20),
         supabase.from("activities").select("*").eq("bin_id", binId).order("created_at", { ascending: false }).limit(20),
@@ -83,7 +83,7 @@ export function useBinsList() {
   useEffect(() => {
     let mounted = true;
     const load = async () => {
-      const { data } = await supabase.from("bins").select("*").order("name");
+      const { data } = await supabase.from("bins").select(BIN_COLS).order("name");
       if (mounted) { setBins(data ?? []); setLoading(false); }
     };
     load();
