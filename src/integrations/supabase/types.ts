@@ -341,9 +341,160 @@ export type Database = {
         }
         Relationships: []
       }
+      waste_bin_config: {
+        Row: {
+          bin_depth_cm: number
+          bin_id: string
+          gas_alert_threshold: number
+          id: number
+          lid_hold_ms: number
+          servo_close_deg: number
+          servo_open_deg: number
+          updated_at: string
+          wifi_pass: string | null
+          wifi_ssid: string | null
+        }
+        Insert: {
+          bin_depth_cm?: number
+          bin_id: string
+          gas_alert_threshold?: number
+          id?: number
+          lid_hold_ms?: number
+          servo_close_deg?: number
+          servo_open_deg?: number
+          updated_at?: string
+          wifi_pass?: string | null
+          wifi_ssid?: string | null
+        }
+        Update: {
+          bin_depth_cm?: number
+          bin_id?: string
+          gas_alert_threshold?: number
+          id?: number
+          lid_hold_ms?: number
+          servo_close_deg?: number
+          servo_open_deg?: number
+          updated_at?: string
+          wifi_pass?: string | null
+          wifi_ssid?: string | null
+        }
+        Relationships: []
+      }
+      waste_bin_telemetry: {
+        Row: {
+          bin_depth_cm: number | null
+          bin_id: string
+          created_at: string
+          distance_cm: number | null
+          fw_version: string | null
+          gas_alert: boolean
+          gas_ppm_est: number | null
+          gas_raw: number | null
+          heap_free: number | null
+          id: number
+          is_full: boolean
+          level_zone: number
+          lid_open: boolean
+          pir_detected: boolean
+          rssi_dbm: number | null
+          uptime_s: number | null
+          waste_filled_cm: number | null
+          waste_pct: number
+          wifi_ssid: string | null
+        }
+        Insert: {
+          bin_depth_cm?: number | null
+          bin_id: string
+          created_at?: string
+          distance_cm?: number | null
+          fw_version?: string | null
+          gas_alert?: boolean
+          gas_ppm_est?: number | null
+          gas_raw?: number | null
+          heap_free?: number | null
+          id?: number
+          is_full?: boolean
+          level_zone: number
+          lid_open?: boolean
+          pir_detected?: boolean
+          rssi_dbm?: number | null
+          uptime_s?: number | null
+          waste_filled_cm?: number | null
+          waste_pct: number
+          wifi_ssid?: string | null
+        }
+        Update: {
+          bin_depth_cm?: number | null
+          bin_id?: string
+          created_at?: string
+          distance_cm?: number | null
+          fw_version?: string | null
+          gas_alert?: boolean
+          gas_ppm_est?: number | null
+          gas_raw?: number | null
+          heap_free?: number | null
+          id?: number
+          is_full?: boolean
+          level_zone?: number
+          lid_open?: boolean
+          pir_detected?: boolean
+          rssi_dbm?: number | null
+          uptime_s?: number | null
+          waste_filled_cm?: number | null
+          waste_pct?: number
+          wifi_ssid?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      vw_bin_daily_summary: {
+        Row: {
+          avg_gas_ppm: number | null
+          avg_waste_pct: number | null
+          bin_id: string | null
+          day: string | null
+          gas_alerts: number | null
+          max_waste_pct: number | null
+          min_waste_pct: number | null
+          total_motion_events: number | null
+          total_readings: number | null
+        }
+        Relationships: []
+      }
+      vw_bin_hourly_avg: {
+        Row: {
+          avg_gas_ppm: number | null
+          avg_waste_pct: number | null
+          bin_id: string | null
+          gas_alert_count: number | null
+          hour: string | null
+          motion_count: number | null
+          reading_count: number | null
+        }
+        Relationships: []
+      }
+      vw_bin_latest: {
+        Row: {
+          bin_depth_cm: number | null
+          bin_id: string | null
+          created_at: string | null
+          fw_version: string | null
+          gas_alert: boolean | null
+          gas_ppm_est: number | null
+          gas_raw: number | null
+          is_full: boolean | null
+          level_zone: number | null
+          lid_open: boolean | null
+          pir_detected: boolean | null
+          rssi_dbm: number | null
+          uptime_s: number | null
+          waste_filled_cm: number | null
+          waste_pct: number | null
+          wifi_ssid: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       get_bin_device_key: { Args: { _bin_id: string }; Returns: string }
