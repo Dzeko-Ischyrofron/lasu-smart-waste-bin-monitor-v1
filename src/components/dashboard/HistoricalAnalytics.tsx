@@ -23,19 +23,23 @@ export function HistoricalAnalytics({ binId }: Props) {
     const toIso = new Date(to + "T23:59:59").toISOString();
 
     const { data, error } = await supabase
-      .from("sensor_readings")
-      .select("*")
+      .from("waste_bin_telemetry")
+      .select("created_at,waste_pct,waste_filled_cm,distance_cm,bin_depth_cm,level_zone,is_full,lid_open,gas_raw,gas_ppm_est,gas_alert,pir_detected,rssi_dbm,wifi_ssid,fw_version,uptime_s")
       .eq("bin_id", binId)
-      .gte("recorded_at", fromIso)
-      .lte("recorded_at", toIso)
-      .order("recorded_at", { ascending: true })
+      .gte("created_at", fromIso)
+      .lte("created_at", toIso)
+      .order("created_at", { ascending: true })
       .limit(10000);
 
     setLoading(false);
     if (error) { toast.error(error.message); return; }
     if (!data || data.length === 0) { toast.info("No readings in that range"); return; }
 
-    const headers = ["recorded_at", "fill_percent", "ultrasonic_cm", "ir_sensor", "mq135_ppm", "servo_angle", "battery", "signal_strength"];
+    const headers = [
+      "created_at","waste_pct","waste_filled_cm","distance_cm","bin_depth_cm","level_zone",
+      "is_full","lid_open","gas_raw","gas_ppm_est","gas_alert","pir_detected",
+      "rssi_dbm","wifi_ssid","fw_version","uptime_s",
+    ];
     const rows = data.map((r) =>
       headers.map((h) => {
         const v = (r as Record<string, unknown>)[h];
@@ -48,7 +52,7 @@ export function HistoricalAnalytics({ binId }: Props) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${binId}-readings-${from}-to-${to}.csv`;
+    a.download = `${binId}-telemetry-${from}-to-${to}.csv`;
     a.click();
     URL.revokeObjectURL(url);
     toast.success(`Exported ${data.length} readings`);
