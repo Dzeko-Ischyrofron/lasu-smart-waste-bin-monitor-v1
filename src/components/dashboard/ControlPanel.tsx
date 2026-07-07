@@ -32,11 +32,7 @@ export function ControlPanel({ bins }: ControlPanelProps) {
     const { error } = await supabase.from("control_commands").insert({
       bin_id: selectedBin, command, issued_by: user?.id,
     });
-    if (!error) {
-      await supabase.from("activities").insert({
-        bin_id: selectedBin, type: "alert", message: `${label} command queued`,
-      });
-    }
+    // Activity feed row is now written automatically by a DB trigger on control_commands.
     setBusy(null);
     if (error) toast.error(error.message);
     else toast.success(`${label} sent — ESP32 will pick it up on next poll`);
