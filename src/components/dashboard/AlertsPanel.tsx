@@ -30,26 +30,36 @@ const badgeStyles = {
   info: "bg-info text-primary-foreground",
 };
 
-export function AlertsPanel({ alerts }: AlertsPanelProps) {
+export function AlertsPanel({ alerts: alertsProp }: AlertsPanelProps) {
   const { isAdmin } = useAuth();
   const [busy, setBusy] = useState<string | null>(null);
+  const [dismissed, setDismissed] = useState<Set<string>>(new Set());
+  const alerts = alertsProp.filter((a) => !dismissed.has(a.id));
 
   const ack = async (id: string) => {
     if (!isAdmin) { toast.error("Only admins can dismiss alerts"); return; }
     setBusy(id);
+    setDismissed((p) => new Set(p).add(id));
     const { error } = await supabase.from("alerts").update({ acknowledged: true }).eq("id", id);
     setBusy(null);
-    if (error) toast.error(error.message);
-    else toast.success("Dismissed");
+    if (error) {
+      setDismissed((p) => { const n = new Set(p); n.delete(id); return n; });
+      toast.error(error.message);
+    } else toast.success("Dismissed");
   };
 
   const clearAll = async () => {
     if (!isAdmin) { toast.error("Only admins can clear alerts"); return; }
+    if (alerts.length === 0) return;
     setBusy("all");
-    const { error } = await supabase.from("alerts").update({ acknowledged: true }).eq("acknowledged", false);
+    const ids = alerts.map((a) => a.id);
+    setDismissed((p) => { const n = new Set(p); ids.forEach((i) => n.add(i)); return n; });
+    const { error } = await supabase.from("alerts").update({ acknowledged: true }).in("id", ids);
     setBusy(null);
-    if (error) toast.error(error.message);
-    else toast.success("All cleared");
+    if (error) {
+      setDismissed((p) => { const n = new Set(p); ids.forEach((i) => n.delete(i)); return n; });
+      toast.error(error.message);
+    } else toast.success("All cleared");
   };
 
   return (
