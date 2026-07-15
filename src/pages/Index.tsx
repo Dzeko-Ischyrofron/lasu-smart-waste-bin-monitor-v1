@@ -56,24 +56,6 @@ const Index = () => {
   }
 
   const sortedReadings = [...readings].reverse();
-  const chartData = sortedReadings.slice(-12).map((r) => ({
-    time: format(new Date(r.recorded_at), "HH:mm"),
-    fillLevel: r.fill_percent ?? 0,
-  }));
-  if (chartData.length === 0) chartData.push({ time: "Now", fillLevel: bin.fill_level });
-
-  const batteryData = sortedReadings.slice(-7).map((r) => ({
-    time: format(new Date(r.recorded_at), "HH:mm"),
-    battery: r.battery ?? bin.battery,
-  }));
-  if (batteryData.length === 0) batteryData.push({ time: "Now", battery: bin.battery });
-
-  const odorData = sortedReadings.slice(-6).map((r, i, arr) => ({
-    hour: i === arr.length - 1 ? "Now" : format(new Date(r.recorded_at), "HH:mm"),
-    level: r.mq135_ppm ?? 0,
-    alerts: (r.mq135_ppm ?? 0) > 300 ? 1 : 0,
-  }));
-  if (odorData.length === 0) odorData.push({ hour: "Now", level: 0, alerts: 0 });
 
   const latest = sortedReadings[sortedReadings.length - 1];
   const sensorReadings = [{
