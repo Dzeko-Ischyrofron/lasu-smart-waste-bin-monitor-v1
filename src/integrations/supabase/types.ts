@@ -498,6 +498,16 @@ export type Database = {
     }
     Functions: {
       get_bin_device_key: { Args: { _bin_id: string }; Returns: string }
+      get_telemetry_trend: {
+        Args: { _bin_id: string; _range: string }
+        Returns: {
+          bucket: string
+          fill_avg: number
+          gas_alerts: number
+          gas_avg: number
+          sample_count: number
+        }[]
+      }
     }
     Enums: {
       activity_type: "alert" | "fill" | "collection" | "control" | "system"
