@@ -161,7 +161,7 @@ const Index = () => {
 
           <TabsContent value="overview" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2"><FillLevelChart data={chartData} title="Fill Level Trend" /></div>
+              <div className="lg:col-span-2"><FillLevelChart binId={bin.id} title="Fill Level Trend" /></div>
               <div className="lg:col-span-1"><RecentActivityCard activities={activityFeed} /></div>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -176,8 +176,8 @@ const Index = () => {
 
           <TabsContent value="analytics" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <BatteryTrendsChart data={batteryData} />
-              <OdorAnalysisChart data={odorData} />
+              <BatteryTrendsChart binId={bin.id} />
+              <OdorAnalysisChart binId={bin.id} />
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <FleetOverview bin={fleetBin} />
