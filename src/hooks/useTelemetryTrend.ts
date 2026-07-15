@@ -31,7 +31,7 @@ export function useTelemetryTrend(binId: string | null, range: TrendRange) {
 
     // Refresh on new telemetry so trends stay live
     const channel = supabase
-      .channel(`trend-${binId}-${range}`)
+      .channel(`trend-${binId}-${range}-${Math.random().toString(36).slice(2)}`)
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "waste_bin_telemetry", filter: `bin_id=eq.${binId}` },
