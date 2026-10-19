@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Enviroment variables and keys
+.env
+.env*
+!.env.example
+
+
